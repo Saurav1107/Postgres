@@ -1,0 +1,31 @@
+-- uncorrealted subqueries
+
+select movie_name ,  movie_length from movies 
+where movie_length > 
+(select avg(movie_length) from movies);
+
+select first_name , last_name , dob from directors
+where dob > (select dob from actors 
+where first_name = 'Tom' and last_name='Cruise')
+
+
+select movie_name from movies
+where movie_id in
+(select movie_id from movie_revenues 
+where international_takings > domestic_takings);
+
+
+select  mo.movie_id,mo.movie_name , d.first_name , d.last_name from movies mo
+join directors d on mo.director_id = d.director_id
+where mo.movie_id in
+(select movie_id from movie_revenues 
+where international_takings > domestic_takings);
+
+
+--Correlated subqueries
+
+
+select mo1.movie_name,mo1.movie_lang , mo1.movie_length from movies mo1
+where mo1.movie_length =(select max(movie_length) from movies mo2
+where mo2.movie_lang = mo1.movie_lang);
+

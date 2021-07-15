@@ -1,0 +1,79 @@
+-- Database: test
+
+-- DROP DATABASE test;
+
+CREATE DATABASE test
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'English_India.1252'
+    LC_CTYPE = 'English_India.1252'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+	
+	
+--modify tables and add columns
+
+create table examples(
+	example_id serial primary key,
+	first_name varchar(30),
+	last_name varchar(30)
+);
+
+select * from examples;
+
+alter table examples 
+add column email varchar(50) UNIQUE
+
+alter table examples
+add column age int not null,
+add column nationality varchar(30);
+
+
+alter table examples 
+alter column nationality TYPE char(3);
+
+
+create table practice(
+id serial primary key ,
+name varchar(50)
+);
+
+drop table practice;
+
+
+-- insert into table
+
+INSERT INTO examples (first_name,last_name,email,age,nationality) 
+values ('david','Mitchell','amitch@gmail.com',43,'GBR');
+
+
+INSERT INTO examples (first_name,last_name,email,age,nationality) 
+values ('emily','Watson','Ewat@gmail.com',23,'USA') , ('Theo' , 'Scott','tscott@gmail.com',33,'AUS'),('Emily','smith','esmith@gmail.com',29,'GBR'),
+('Jim','Burr','jburr@gmail.com',30,'USA');
+
+-- update data into table
+
+Update examples
+set email = 'davidm@gmail.com'
+WHERE example_id = 1;
+
+update examples 
+set nationality = 'CAN'
+WHERE nationality ='USA';
+
+update examples 
+set first_name ='James' , age = 55
+where example_id = 5;
+
+--DELETE data from table
+
+DELETE from examples 
+where example_id = 2;
+
+
+DELETE from examples where nationality = 'GBR';
+
+DELETE from examples;
+
+select * from examples;

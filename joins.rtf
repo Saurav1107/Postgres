@@ -1,0 +1,111 @@
+--inner joins
+
+select * from directors;
+select * from movies;
+
+insert into directors (first_name,last_name,dob,nationality) values('Christopher', 'Nolan' , '1970-07-11' , 'British');
+
+select directors.director_id, directors.first_name , directors.last_name , movies.movie_name from directors
+inner join movies on directors.director_id = movies.director_id;
+
+select directors.director_id, directors.first_name , directors.last_name , movies.movie_name from directors
+inner join movies on directors.director_id = movies.director_id
+where movies.movie_lang = 'Japanese'
+order by movies.movie_length;
+
+select d1.director_id, d1.first_name , d1.last_name , m1.movie_name from directors AS d1
+inner join movies as m1 on d1.director_id = m1.director_id;
+
+select mo.movie_name , mr.domestic_takings , mr.international_takings from movies  mo
+inner join movie_revenues  mr on mo.movie_id = mr.movie_id
+where mr.domestic_takings is not null
+order by mr.domestic_takings;
+
+select mo.movie_name , mr.domestic_takings , mo.age_certificate from movies mo
+join movie_revenues mr using (movie_id)
+where mo.age_certificate in ('12','15','18') and mr.domestic_takings is not null
+order by domestic_takings desc;
+
+
+--Left join
+
+select d.first_name,d.last_name,mo.movie_name from directors d
+left join movies mo on d.director_id = mo.director_id
+
+select d.first_name,d.last_name,mo.movie_name from directors d
+left join movies mo on d.director_id = mo.director_id
+where d.nationality = 'British'
+
+--Right Join
+
+select d.first_name,d.last_name,mo.movie_name from directors d
+Right join movies mo on d.director_id = mo.director_id
+
+select d.first_name,d.last_name,mo.movie_name from directors d
+right join movies mo on d.director_id = mo.director_id
+where mo.age_certificate = '18'
+
+
+--Full outer join
+
+select d.first_name,d.last_name,mo.movie_name from directors d
+full join movies mo on d.director_id = mo.director_id
+
+select d.first_name,d.last_name,mo.movie_name from directors d
+full join movies mo on d.director_id = mo.director_id
+where mo.movie_lang in ('German' , 'Korean')
+order by d.last_name;
+
+-- Joining more than 2 tables
+
+select d.first_name , d.last_name , mo.movie_name , mr.domestic_takings , mr.international_takings from directors d
+join movies mo on d.director_id = mo.director_id
+join movie_revenues mr on mr.movie_id = mo.movie_id;
+
+
+select ac.first_name , ac.last_name , mo.movie_name from actors ac
+join movies_actors ma on ac.actor_id = ma.actor_id
+join movies mo on mo.movie_id = ma.movie_id
+where mo.movie_lang = 'English';
+
+
+select d.first_name , d.last_name , mo.movie_name , ac.first_name , ac.last_name, mr.domestic_takings , mr.international_takings
+from directors d
+join movies mo on d.director_id = mo.director_id
+join movies_actors ma on ma.movie_id = mo.movie_id
+join actors ac on ac.actor_id = ma.actor_id
+join movie_revenues mr on mr.movie_id = mo.movie_id;
+
+
+-- Union 
+
+select first_name , last_name from directors
+union
+select first_name , last_name from actors
+
+
+select first_name , last_name ,dob from directors
+where nationality = 'American'
+union
+select first_name , last_name , dob from actors
+where gender = 'F'
+order by first_name
+
+--Union all
+
+select first_name from directors 
+union all
+select first_name from actors
+
+
+--intersect
+
+select first_name , last_name from directors
+intersect
+select first_name ,last_name from actors
+
+--except 
+
+select first_name , last_name from directors
+except 
+select first_name , last_name from actors

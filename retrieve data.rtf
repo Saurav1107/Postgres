@@ -1,0 +1,135 @@
+--select queries
+
+select first_name from directors;
+
+select first_name , last_name from directors;
+
+select first_name,last_name,nationality from directors;
+
+-- select with where clauses
+
+select * from movies where age_certificate = '15';
+
+select * from movies where movie_lang = 'English' and age_certificate = '15' and director_id = 27;
+
+--using logical operators(< , <= , > , >=)
+
+select movie_name,movie_length from movies where movie_length > 120;
+
+select movie_name,movie_length from movies where movie_length >= 120;
+
+select movie_name,movie_length from movies where movie_length < 120;
+
+select movie_name,movie_length from movies where movie_length <= 120;
+
+select * from movies where release_date > '1999-12-31';
+
+select * from movies where movie_lang > 'English';
+
+
+-- Using IN and NOT IN
+
+select first_name , last_name from actors 
+where first_name IN ('Bruce' , 'John' , 'Peter');
+
+select first_name , last_name from actors 
+where first_name NOT IN ('Bruce' , 'John' , 'Peter');
+
+select * from actors where actor_id IN (2,3,4,5,6,8);
+
+select * from actors where actor_id NOT IN (2,3,4,5,6,8);
+
+
+-- Using LIKE with % and _ 
+
+select * from actors where first_name like 'P%';
+
+select * from actors where first_name like '%r';
+
+select * from actors where first_name like '_e%';
+
+select * from actors where first_name like '___';
+
+select * from actors where first_name like '__m%';
+
+select * from actors where first_name like '%rl%';
+
+
+-- selecting data where a column is between 2 values 
+
+select * from movies where release_date between '1995-01-01' and '1999-12-31';
+
+select movie_name , movie_length from movies where movie_length between 90 and 120;
+
+-- select by order 
+
+select * from actors ORDER BY first_name;
+
+select * from actors ORDER BY first_name desc;
+
+select * from actors ORDER BY actor_id ;
+
+select * from actors ORDER BY actor_id desc;
+
+select * from actors ORDER BY dob ;
+
+select * from actors 
+where gender = 'F'
+ORDER BY dob desc;
+
+
+-- LIMIT by N
+
+select * from movie_revenues 
+ORDER BY revenue_id
+LIMIT 5 OFFSET 3;
+
+
+-- Using Fetch
+
+select movie_id , movie_name from movies
+fetch first 4 row only;
+
+select movie_id , movie_name from movies
+OFFSET 8 row
+fetch first 4 row only;
+
+-- Distinct 
+
+select distinct movie_lang from movies order by movie_lang;
+
+select distinct * from movies order by movie_lang ;
+
+-- Dealing with NULL values
+
+select * from actors 
+where dob is null;
+
+select * from actors 
+where dob is not null;
+
+select * from movie_revenues 
+where domestic_takings is not null
+order by domestic_takings desc
+limit 10;
+
+select * from movie_revenues 
+where international_takings is null and domestic_takings is not null;
+
+
+-- setting column name alias 
+
+select movie_name as movies from movies;
+
+select last_name as surname from directors 
+where last_name like 'A%' 
+order by surname;
+
+
+--Using concatenate 
+
+select 'concat' || ' ' ||'together' as new_string;
+
+select CONCAT(first_name ,' ', last_name) AS full_name from actors;
+
+select concat_ws(' ',first_name,last_name) as full_name from actors;

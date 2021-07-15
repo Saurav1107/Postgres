@@ -1,0 +1,182 @@
+--challenge 1 
+
+select movie_name ,release_date from movies;
+
+select first_name ,last_name from directors where nationality ='American';
+
+select * from actors where gender = 'M' and dob > '1970-01-01';
+
+select movie_name from movies where movie_length > 90 and movie_lang = 'English';
+
+-- challenge 2
+
+select movie_name , movie_lang from movies
+where movie_lang IN ('English' , 'Korean' , 'Spanish');
+
+select first_name , last_name , dob from actors 
+where last_name like 'M%' and dob between '1940-01-01' and  '1969-12-31';
+
+select first_name,last_name,nationality from directors 
+where nationality IN ('British' , 'French' , 'German') and dob between '1950-01-01' and '1980-12-31';
+
+--challenge 3
+
+select * from directors 
+WHERE nationality = 'American'
+order by dob ;
+
+select distinct nationality from directors 
+order by nationality;
+
+select first_name , last_name , dob from actors 
+where gender = 'F'
+order by dob desc
+fetch first 10 row only;
+
+--challenge 4
+
+select * from movie_revenues 
+where international_takings is not null
+order BY international_takings desc
+limit 3;
+
+select concat_ws(' ',first_name , last_name) as full_name from directors;
+
+select * from actors where first_name is null or dob is null;
+
+--challenge 5
+
+select count(first_name) from actors 
+where dob > '1970-01-01';
+
+select max(domestic_takings) from movie_revenues;
+
+select min(domestic_takings) from movie_revenues;
+
+select sum(movie_length) from movies
+where age_certificate = '15';
+
+select count(first_name) as directors from directors
+where nationality = 'Japanese';
+
+select avg(movie_length) as Average from movies 
+where movie_lang = 'Chinese';
+
+--challenge 6
+
+select nationality ,count(nationality) from directors 
+group by nationality;
+
+select movie_lang , age_certificate , sum(movie_length) from movies
+group by movie_lang , age_certificate
+order by movie_lang , age_certificate;
+
+select movie_lang, sum(movie_length) from movies
+group by movie_lang	
+having sum(movie_length) > 500;
+
+--challenge 7
+
+select d.first_name,d.last_name,mo.movie_name,mo.release_date from directors d
+join movies mo using (director_id)
+where mo.movie_lang in ('Chinese','Korean','Japanese');
+
+
+select mo.movie_name,mo.release_date , mr.international_takings from movies mo
+join movie_revenues mr using (movie_id)
+where mo.movie_lang = 'English';
+
+select mo.movie_name,mr.domestic_takings , mr.international_takings from movies mo
+inner join movie_revenues mr on mo.movie_id = mr.movie_id
+where mr.domestic_takings is null or mr.international_takings is null
+order by movie_name;
+
+--challenge 8 
+
+select d.first_name , d.last_name, mo.movie_name , mo.age_certificate from directors d
+left join movies mo on d.director_id = mo.director_id
+where d.nationality = 'British';
+
+select d.first_name , d.last_name , count(mo.movie_id) from directors d
+left join movies mo on d.director_id = mo.director_id
+group by d.first_name,d.last_name;
+
+--challenge 9
+
+select ac.first_name , ac.last_name from actors ac
+join movies_actors ma on ac.actor_id = ma.actor_id
+join movies mo on ma.movie_id = mo.movie_id
+join directors d on mo.director_id = mo.director_id
+where d.first_name = 'Wes' and d.last_name = 'Anderson'
+
+
+select d.first_name , d.last_name , sum(mr.domestic_takings) as total_dom_takings from directors d
+join movies mo on d.director_id = mo.director_id
+join movie_revenues mr on mo.movie_id = mr.movie_id
+where mr.domestic_takings is not null
+group by d.first_name ,d.last_name
+order by total_dom_takings desc 
+limit 1
+
+
+--challenge 10
+
+select first_name , last_name , dob from directors 
+union 
+select first_name , last_name , dob from actors
+order by dob
+
+
+select first_name , last_name , dob from directors 
+where dob between '1959-12-31' and '1961-01-01'
+union all
+select first_name , last_name , dob from actors
+where dob between '1959-12-31' and '1961-01-01'
+order by last_name
+
+
+--challenge 11
+
+select first_name , last_name from directors
+intersect
+select first_name ,last_name from actors
+
+select first_name from actors 
+where gender = 'M'
+except 
+select first_name from directors
+where nationality = 'British'
+
+
+--challenge 12
+
+select first_name , last_name , dob from actors 
+where dob > 
+(select dob from actors 
+where first_name = 'Marlon'
+and last_name = 'Brando')
+
+select movie_id,movie_name from movies where 
+movie_id in (select movie_id from movie_revenues 
+where domestic_takings > 300)
+
+
+select min(movie_length) , max(movie_length) from movies
+where movie_id in(
+select movie_id from movie_revenues
+where domestic_takings > (select avg(domestic_takings) from movie_revenues));
+
+
+--challenge 13
+
+select ac.first_name , ac.last_name , ac.dob from actors ac
+where dob = (
+select max(dob) from actors ac1
+where ac1.gender = ac.gender)
+
+select mo.movie_name , mo.movie_length , mo.age_certificate from movies mo
+where movie_length > 
+(select avg(movie_length) from movies mo1
+where mo1.age_certificate = mo.age_certificate)
+order by mo.age_certificate;
+
